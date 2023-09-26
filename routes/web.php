@@ -5,6 +5,7 @@ use App\Http\Controllers\ClientController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\Client;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,18 +32,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::get('/clientslist', function () {
-        return Inertia::render('ClientsList');
-    })->name('clientslist');
-
+    Route::get('/clients', function() {
+        return Inertia::render('Clients/Index', [
+            'clients' => Client::orderBy('first_name')
+                ->paginate(9)
+        ]);
+    })->name('clients');
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
 
-Route::get('/clients/{id}', [ClientController::class, 'show'])->name('clients.show');
+
 
 require __DIR__.'/auth.php';

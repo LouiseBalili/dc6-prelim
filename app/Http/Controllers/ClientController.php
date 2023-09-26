@@ -13,7 +13,10 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        return inertia('Clients/Index', [
+            'clients' => Client::orderBy('first_name', 'asc')
+                ->paginate(9)
+        ]);
     }
 
     /**
@@ -35,18 +38,9 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
-{
-    $client = Client::find($id);
+    public function show($id) {
 
-    if (!$client) {
-        return redirect()->back()->with('error', 'Client not found');
     }
-
-    return Inertia::render('ClientCard', [
-        'client' => $client,
-    ]);
-}
 
     /**
      * Show the form for editing the specified resource.
